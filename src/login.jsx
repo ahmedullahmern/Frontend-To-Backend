@@ -1,24 +1,29 @@
 import axios from "axios";
-import { useState } from "react"
+import Cookies from 'js-cookie'
+import { useContext, useState } from "react"
 import { Link } from "react-router-dom"
 import { AppRoutes } from "./constant/constant";
+import { AuthContext } from "./context/AuthContext";
 
 function Login() {
-    const [loading, isLoading] = useState(false);
+    const [isLoading, setLoading] = useState(false);
+    const { setUser } = useContext(AuthContext)
     const handleLogin = (e) => {
+        setLoading(true)
         e.preventDefault();
-        isLoading(true)
         const obj = {
             email: e.target[0].value,
             password: e.target[1].value,
         }
         axios.post(AppRoutes.login, obj)
-            .then((res) => {
+        .then((res) => {
+                setLoading(false)
+                Cookies.set('token', res?.data?.data?.token)
+                setUser(res?.data?.data?.user)
                 console.log("res.data==>", res);
-                isLoading(false)
             }).catch((err) => {
+                setLoading(false)
                 console.log("error==>", err);
-                isLoading(false)
             })
     }
     return (
