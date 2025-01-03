@@ -5,8 +5,10 @@ import Cookies from 'js-cookie';
 import { AppRoutes } from "../constant/constant";
 import Card from "../components/Card";
 import { data } from "react-router-dom";
+import getHeader from "../helper/getHeader";
 
 export default function User() {
+    const head = getHeader()
     const [courses, setCourses] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({
@@ -20,11 +22,7 @@ export default function User() {
     }, []);
 
     const getCourse = () => {
-        axios.get(AppRoutes.getCourse, {
-            headers: {
-                Authorization: `Bearer ${Cookies.get('token')}`
-            }
-        }).then((res) => {
+        axios.get(AppRoutes.getCourse, head).then((res) => {
             console.log("resInGetCourse==>", res.data.data[1].title);
             setCourses(res.data.data); // Assuming your API response contains courses in `res.data.data`
         }).catch((err) => {
@@ -40,11 +38,7 @@ export default function User() {
     };
 
     const handleAddCourse = () => {
-        axios.post(AppRoutes.addCourse, formData, {
-            headers: {
-                Authorization: `Bearer ${Cookies.get('token')}`
-            }
-        }).then((res) => {
+        axios.post(AppRoutes.addCourse, formData, head).then((res) => {
             console.log("Course added==>", res);
             setShowModal(false); // Close modal after successful submission
             setFormData({ title: "", description: "", thumbnail: "" }); // Reset form
@@ -113,7 +107,7 @@ export default function User() {
                     <div className="container px-5 py-10 mx-auto">
                         <div className="flex flex-wrap -m-4">
                             {courses.map((data) => (
-                                < Card data={data} />
+                                < Card data={data} key={data._id} />
                             ))}
                         </div>
                     </div>
