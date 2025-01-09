@@ -20,7 +20,7 @@ function Login() {
                 setLoading(false)
                 Cookies.set('token', res?.data?.data?.token)
                 setUser(res?.data?.data?.user)
-                console.log("res.data==>", res);
+                // console.log("res.data==>", res);
             }).catch((err) => {
                 setLoading(false)
                 console.log("error==>", err);
